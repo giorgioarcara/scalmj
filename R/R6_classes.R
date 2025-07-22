@@ -7,7 +7,7 @@ Adjuster <- R6::R6Class("Adjuster",
     which_worse ="high",    
     model_data=NULL,
     adjust=function() {
-      
+      #browser()
       if (is.null(self$model)) stop("Please pass a model before adjusting")
       model<-self$model
       if (length(model$coefficients)==1) return(model.response(model.frame(model)))
@@ -407,6 +407,8 @@ Selector <- R6::R6Class("Selector",
     .univariate_tab=NULL,
     .maketerms = function(df) {
       
+      #browser()
+      
       private$.data<-self$data
     
       for (i in seq_len(nrow(df))) {
@@ -506,7 +508,9 @@ Selector <- R6::R6Class("Selector",
       return(res)
     },
     .select_comb= function() {
-
+      
+      #browser()
+      
       tr<-lapply(self$covs,function(x) lapply(x$transformations, function(z) paste0(x$name,"_",z$id)))
       gtr<-expand.grid(tr)
       ## deal with factors
@@ -560,7 +564,10 @@ Selector <- R6::R6Class("Selector",
       names(res)<-c("estimate","se","test","p")
       res$df<-stats::df.residual(self$model)
       res$rowname<-rownames(res)
+      
+      mark(res$df)
 
+      
       ## this is for labeling
       labs<-list()
       for (x in self$covs) {
@@ -576,7 +583,9 @@ Selector <- R6::R6Class("Selector",
  
       res$name<-NA
       res$fun<-NA
-
+      
+      mark(res) # Giorgio
+      
      for (var in labs) {
            res$name[res$rowname==var$var]<-var$name
            res$fun[res$rowname==var$var]<-TRANSFUN[[var$id]]$name
@@ -587,7 +596,6 @@ Selector <- R6::R6Class("Selector",
         }
 
       return(res)
-      
     }
 
   )
